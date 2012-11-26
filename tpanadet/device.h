@@ -22,17 +22,19 @@ typedef Device<TwoNode,SourceValue> DeviceSource;
 typedef Device<FourNode,CommonEFGHValue> DeviceEFGH;
 */
 
-
 template<typename _DeviceNode,
 		typename _DeviceValue,
-		typename _Stamp=EmptyObject,	// MNA stamp policy
-		typename _Symbol=EmptyObject>	// symbolic policy
-class Device : public Elem
+		typename _DeviceTrait>
+class Device
 {
 public:
 	Device()=default;
+	// two node normal device
 	Device(string nm,int p,int n,double v/*,ParamExpr* expr=nullptr*/);
+	// four node normal device
 	Device(string nm,int p,int n,int pp,int nn,double v=0/*,ParamExpr* expr=nullptr*/);
+	// two node source device
+	Device(string nm,int p,int n,double v0,double v1);
 
 	string Name()	{	return name;}
 	void Name(string s) { name = s;}
@@ -50,12 +52,17 @@ private:
 public:
 	_DeviceNode node;
 	_DeviceValue value;
-	_Stamp stamp;
-	_Symbol symbol;
+	typedef _DeviceTrait _Trait;
 };
 
-template<typename _DeviceValue, typename _Stamp, typename _Symbol>
-Device<TwoNode, _DeviceValue, _Stamp, _Symbol>::Device(string nm, int p, int n,
+template<typename _DeviceTrait>
+Device<TwoNode,SourceValue,_DeviceTrait>::Device(string nm,int p,int n,double v0,double v1)
+	:name(nm), node(TwoNode(p, n)), value(SourceValue(v0,v1))
+{
+}
+
+template<typename _DeviceValue,typename _DeviceTrait>
+Device<TwoNode, _DeviceValue, _DeviceTrait>::Device(string nm, int p, int n,
 		double v/*,ParamExpr* expr=nullptr*/) :
 	name(nm), node(TwoNode(p, n)), value(_DeviceValue(v))
 {
@@ -67,8 +74,6 @@ Device<FourNode, _DeviceValue, _Stamp, _Symbol>::Device(string nm, int p,
 	name(nm), node(FourNode(p, n, pp, nn)), value(_DeviceValue(v))
 {
 }
-
-
 
 
 #endif /* DEVICE_H_ */

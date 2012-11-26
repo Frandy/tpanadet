@@ -8,7 +8,20 @@
 #ifndef STAMP_H_
 #define STAMP_H_
 
-template<typename Device>
+
+/*
+ * Device,
+ * 	policy trait:
+ * 		_DcLoad,
+ * 		_AcLoad,
+ *
+ * 		_DcSup,
+ * 		_AcSup,
+ *
+ */
+
+
+template<typename _Device>
 class Stamp
 {
 public:
@@ -16,30 +29,41 @@ public:
 	/**
 	 * @brief load device into MNA, according to device type
 	 */
-	void LoadDc(Device& device,MNA<double>& mna);
-	void LoadTran(Device&,double t,double h,device,MNA<double>& mna);
-	void LoadAc(Device& device,CPLX& s,MNA<CPLX>& mna);
+	void DcLoad(_Device& device,MNA<double>& mna,vector<int>& row,vector<int>& col)
+	{
+		_Device::_Trait::_DcLoad load;
+		load(device.node,device.DcValue(),mna,row,col);
+	}
+
+/*
+ 	void TranLoad(Device& ,device,double t,double h,MNA<double>& mna,vector<int>& row,vector<int>& col)
+	{
+		_Device::_Trait::_TranLoad load;
+		load(device.node,device.TranValue(h,t),mna,row,col);
+	}
+*/
+	void AcLoad(Device& device,CPLX& s,MNA<CPLX>& mna,vector<int>& row,vector<int>& col)
+	{
+		_Device::_Trait::_AcLoad load;
+		load(device.node,device.AcValue(s),mna,row,col);
+	}
 	//@}
 	//@{
 	/**
-	 * @ brief sup shorted node, and re-index row and column
+	 * @brief sup shorted node, and re-index row and column
 	 */
-	void InitDcEntry(Device& device,MNA<double>& mna);
-	void InitTranEntry(Device& device,MNA<double>& mna);
-	void InitAcEntry(Device& device,MNA<CPLX>& mna);
+	void InitDcSup(Device& device,vector<int>& row,vector<int>& col)
+	{
+		_Device::_Trait::_DcSup sup;
+		sup(device.node,row,col);
+	}
+//	void InitTranSup(Device& device,vector<int>& row,vector<int>& col);
+	void InitAcSup(Device& device,vector<int>& row,vector<int>& col)
+	{
+		_Device::_Trait::_AcSup sup;
+		sup(device.node,row,col);
+	}
 	//@}
-	//@{
-	/**
-	 * @ brief initial stamp entry
-	 */
-	void AddDcEntry(Device& device,MNA<double>& mna);
-	void AddTranEntry(Device& device,MNA<double>& mna);
-	void AddAcEntry(Device& device,MNA<CPLX>& mna);
-	//@}
-private:
-	vector<pair<int,int> > dcentry;
-	vector<pair<int,int> > tranentry;
-	vector<pair<int,int> > acentry;
 };
 
 // empty stamp

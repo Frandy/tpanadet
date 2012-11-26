@@ -18,6 +18,7 @@
 
 // use fisrt instead of nodep, nodepp, not easy misuse
 
+/*
 class TwoNode
 {
 public:
@@ -32,7 +33,8 @@ protected:
 	int nodep;
 	int noden;
 };
-
+*/
+/*
 class FourNode:public TwoNode
 {
 public:
@@ -49,7 +51,7 @@ private:
 	int nodepp;
 	int nodenn;
 };
-
+*/
 
 /*
 subckt_node:
@@ -61,21 +63,23 @@ subckt_node:
 */
 
 // array<type,size>, not good for initialize
+typedef array<int,2> TwoNode;
+typedef array<int,4> FourNode;
 typedef vector<int> ArrayNode;
 
 
 ostream& operator << (ostream& out,const TwoNode& node)
 {
 	out << " node: ";
-	out << setw(4) << node.First() << " " << node.Second() << " ";
+	out << setw(4) << node[0] << " " << node[1] << " ";
 	return out;
 }
 
 ostream& operator << (ostream& out,const FourNode& node)
 {
 	out << " node: ";
-	out << setw(4) << node.First() << " " << node.Second() << "  ";
-	out << setw(4) << node.Third() << " " << node.Fourth() << " ";
+	out << setw(4) << node[0] << " " << node[1] << "  ";
+	out << setw(4) << node[2] << " " << node[3] << " ";
 	return out;
 }
 

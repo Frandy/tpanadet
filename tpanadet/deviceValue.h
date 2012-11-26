@@ -90,10 +90,10 @@ public:
 	double Value() {return dcFunc(admittance);}
 
 	// return admittance, for dc analysis
-	double Admittance()	const { return admittance;}
+	double DcValue()	const { return admittance;}
 
 	// return cplx admittance, for ac analysis
-	Cplx CplxValue(Cplx s)	{	return acFunc(s,admittance);}
+	Cplx AcValue(Cplx s)	{	return acFunc(s,admittance);}
 
 	// return tran value, for tran analysis
 	double TranValue(double h){ return tranFunc(h,admittance);}
