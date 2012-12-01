@@ -65,19 +65,19 @@ public:
 };
 
 template<typename _DcValue,typename _AcValue,typename _TranValue>
-class DeviceValue
+class TpDeviceValue
 {
 public:
-	DeviceValue()=default;
-	DeviceValue(double d){admittance = dcFunc(d);}
-	DeviceValue(const DeviceValue& value){
+	TpDeviceValue()=default;
+	TpDeviceValue(double d){admittance = dcFunc(d);}
+	TpDeviceValue(const TpDeviceValue& value){
 		admittance = value->Admittance();
 		dcFunc = _DcValue();
 		acFunc = _AcValue();
 		tranFunc = _TranValue();
 	}
 /*
-	friend ostream& operator << (ostream& out,DeviceValue& value)
+	friend ostream& operator << (ostream& out,TpDeviceValue& value)
 	{
 		out << " value: ";
 		// default precision is 6, is ok
@@ -104,10 +104,10 @@ private:
 	_TranValue tranFunc;
 };
 
-typedef DeviceValue<Admittance,AcZeroOrder,TranNormal> NormalEFGHValue;
-typedef DeviceValue<Impedance,AcZeroOrder,TranNormal> ResValue;
-typedef DeviceValue<Admittance,AcPlusOrder,TranTime> CapValue;
-typedef DeviceValue<Impedance,AcMinusOrder,TranTime> IndValue;
+typedef TpDeviceValue<Admittance,AcZeroOrder,TranNormal> NormalEFGHValue;
+typedef TpDeviceValue<Impedance,AcZeroOrder,TranNormal> ResValue;
+typedef TpDeviceValue<Admittance,AcPlusOrder,TranTime> CapValue;
+typedef TpDeviceValue<Impedance,AcMinusOrder,TranTime> IndValue;
 
 
 // not good to use wave as template param, which make not easy to modify wave property
@@ -150,8 +150,8 @@ private:
 };
 
 // not good, same code generated many times
-template<typename DeviceValue>
-ostream& operator << (ostream& out,DeviceValue& value)
+template<typename TpDeviceValue>
+ostream& operator << (ostream& out,TpDeviceValue& value)
 {
 	out << " value: ";
 	// default precision is 6, is ok

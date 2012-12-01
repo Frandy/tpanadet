@@ -20,6 +20,14 @@
  *
  */
 
+template<MnaAnalysisType type,typename _Sup,typename _Load>
+class TpStamp
+{
+public:
+	typedef _Sup sup;
+	typedef _Load load;
+};
+
 
 template<typename _Device>
 class Stamp

@@ -8,6 +8,8 @@
 #ifndef DEVICE_H_
 #define DEVICE_H_
 
+
+
 // template only conveniant for common device, RCLEFGHVI.
 // add valuetype with model
 // how to construct device ?
@@ -22,54 +24,93 @@ typedef Device<TwoNode,SourceValue> DeviceSource;
 typedef Device<FourNode,CommonEFGHValue> DeviceEFGH;
 */
 
-template<typename _DeviceNode,
-		typename _DeviceValue,
-		typename _DeviceTrait>
-class Device
+template<DeviceType type,typename _DeviceNode,typename _DeviceValue,
+		typename _StampTrait,typename _SymbolTrait=void>
+class TpDevice:public Elem
 {
 public:
-	Device()=default;
+	TpDevice()=default;
 	// two node normal device
-	Device(string nm,int p,int n,double v/*,ParamExpr* expr=nullptr*/);
+	TpDevice(string nm,int p,int n,double v/*,ParamExpr* expr=nullptr*/);
 	// four node normal device
-	Device(string nm,int p,int n,int pp,int nn,double v=0/*,ParamExpr* expr=nullptr*/);
+	TpDevice(string nm,int p,int n,int pp,int nn,double v=0/*,ParamExpr* expr=nullptr*/);
 	// two node source device
-	Device(string nm,int p,int n,double v0,double v1);
+	TpDevice(string nm,int p,int n,double v0,double v1);
 
 	string Name()	{	return name;}
 	void Name(string s) { name = s;}
 
-	friend ostream& operator << (ostream& out,Device& device){
+	void Print(ostream& out){
 			out << "name: ";
-			out << device.Name() << "\t";
-			out << device.node << "\t";
-			out << device.value << " ";
+			out << name << "\t";
+			out << node << "\t";
+			out << value << " ";
 			return out;
 		}
+
+/* Dc Analysis interface, sup & load */
+	void InitDcSup(vector<int>& row,vector<int>& col)
+	{
+		StampTrait::DcStamp::sup sup;
+		sup(node,row,col);
+	}
+
+	void DcLoad(MNA<double>& mna,vector<int>& row,vector<int>& col)
+	{
+		StampTrait::DcStamp::load load;
+		load(node,value.DcValue(),mna,row,col);
+	}
+
+/* Ac Analysis interface, sup & load */
+	void InitAcSup(vector<int>& row,vector<int>& col)
+	{
+		StampTrait::AcStamp::sup sup;
+		sup(node,row,col);
+	}
+
+	void AcLoad(CPLX& s,MNA<CPLX>& mna,vector<int>& row,vector<int>& col)
+	{
+		StampTrait::AcStamp::load load;
+		load(node,value.AcValue(s),mna,row,col);
+	}
+
+/* Tran Analysis interface, sup & load */
+
+ 	void TranLoad(double t,double h,MNA<double>& mna,vector<int>& row,vector<int>& col)
+	{
+ 		StampTrait::TranStamp::load load;
+		load(node,value.TranValue(h,t),mna,row,col);
+	}
+
+/* Symbol interface */
+
 
 private:
 	string name;
 public:
 	_DeviceNode node;
 	_DeviceValue value;
-	typedef _DeviceTrait _Trait;
+	typedef _StampTrait StampTrait;
+	typedef _SymbolTrait SymbolTrait;
 };
 
-template<typename _DeviceTrait>
-Device<TwoNode,SourceValue,_DeviceTrait>::Device(string nm,int p,int n,double v0,double v1)
-	:name(nm), node(TwoNode(p, n)), value(SourceValue(v0,v1))
+/* construct for different device, source, RCL, & EFGH */
+
+template<DeviceType type,typename _StampTrait>
+TpDevice<type,TwoNode,SourceValue,_StampTrait,void>::TpDevice(string nm,int p,int n,double v0,double v1)
+	:Elem(type),name(nm), node(TwoNode(p, n)), value(SourceValue(v0,v1))
 {
 }
 
-template<typename _DeviceValue,typename _DeviceTrait>
-Device<TwoNode, _DeviceValue, _DeviceTrait>::Device(string nm, int p, int n,
+template<DeviceType type,typename _DeviceValue,typename _StampTrait,typename _SymbolTrait>
+TpDevice<type,TwoNode, _DeviceValue, _StampTrait,_SymbolTrait>::TpDevice(string nm, int p, int n,
 		double v/*,ParamExpr* expr=nullptr*/) :
-	name(nm), node(TwoNode(p, n)), value(_DeviceValue(v))
+		Elem(type),name(nm), node(TwoNode(p, n)), value(_DeviceValue(v))
 {
 }
 
-template<typename _DeviceValue, typename _Stamp, typename _Symbol>
-Device<FourNode, _DeviceValue, _Stamp, _Symbol>::Device(string nm, int p,
+template<typename _DeviceValue, typename _StampTrait, typename _SymbolTrait>
+TpDevice<FourNode, _DeviceValue, _StampTrait, _SymbolTrait>::TpDevice(string nm, int p,
 		int n, int pp, int nn, double v/*,ParamExpr* expr=nullptr*/) :
 	name(nm), node(FourNode(p, n, pp, nn)), value(_DeviceValue(v))
 {
