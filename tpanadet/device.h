@@ -75,6 +75,11 @@ public:
 	}
 
 /* Tran Analysis interface, sup & load */
+	void InitTranSup(vector<int>& row,vector<int>& col)
+	{
+		StampTrait::TranStamp::sup sup;
+		sup(node,row,col);
+	}
 
  	void TranLoad(double t,double h,MNA<double>& mna,vector<int>& row,vector<int>& col)
 	{

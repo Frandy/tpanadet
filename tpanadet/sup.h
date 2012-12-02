@@ -10,7 +10,7 @@
 
 /*
  * sup algorithm:
- * 		initial row & col vector 0~N
+ * 		initial row & col vector 0~N, by analysis instance
  * 		sup elem & re-index, only for nullor, switch, & shorted elem
  * 		only sup for F,G,H,Vs, no re-index
  *		initial stamp entry
@@ -42,10 +42,11 @@
  *		stamp vector, vector<pair<int,int> > pos, vs. vector<int> colrow.
  */
 
+//@{ sup operation for two int node
+
 class SupReindex
 {
 public:
-
 	void operator()(int a, int b, vector<int>& nodeset)
 	{
 		if (b == a)
@@ -77,14 +78,23 @@ public:
 	}
 };
 
-// only need for TwoNode
+//@}
+
+// no need sup, for TwoNode, R, or for FourNode, G
+template<typename Node>
 class EmptySup
 {
 public:
-	void operator()(TwoNode& node,vector<int>& row,vector<int>& col)
+	void operator()(Node& node,vector<int>& row,vector<int>& col)
 	{
 	}
 };
+
+typedef EmptySup<TwoNode> EmptySup2;
+typedef EmptySup<FourNode> EmptySup4;
+typedef EmptySup<ArrayNode> EmptySupN;
+
+//@{ sup operation for device, E, F, H, OPAMP, & Fault-Short elem
 
 class ESup
 {
@@ -138,5 +148,7 @@ public:
 		sup(node[0],node[1],row);
 	}
 };
+
+//@}
 
 #endif /* SUP_H_ */
