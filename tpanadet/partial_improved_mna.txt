@@ -1,0 +1,77 @@
+three kinds of implementation:
+	generalized MNA
+	improved MNA
+	partial improved MNA
+
+generalized MNA
+	conventional MNA, add branch for Vs, E, F, H, and transient C, L
+	row branch index == col branch index
+	matrix size >= node, normally
+	
+improved MNA
+	super node and add branch, stamp size == node
+	matrix size == node, normally
+	
+some problems:
+	OPAMP, switch, => super node
+	transient C, L => add branch
+	
+=> partial improved MNA
+
+partial improved MNA
+	super node and add branch, E, F, H, stamp size == node
+	OPAMP, switch => super node
+	Vs, transient C, L => add branch, row branch index == col branch index
+
+interface:	
+	sup(node,row,col)
+	branch(index,k)
+	load(node,value,mna,row,col,index,k)
+=> unified for dc, ac and transient
+
+note:
+	keep branch index in vector, visit according itself
+	example:
+		Vs.branch(index,k)
+			index.push_back(++k)
+		transient C.branch(index,k)
+			index.push_back(++k)
+			
+		Vs.load(node,value,mna,row,col,index,k)
+			rowk = row[index[k]]
+			mna.CellSet(rowk,cola,1)
+			mna.CellSet(rowk,colb,-1)
+			mna.RhsSet(rowk,value)
+		
+	to reduce parameters,
+		struct StampIndex
+			row,
+			col,
+			index
+				
+ok.
+
+in fact, the interface is appropriate for generalized MNA
+if use StampIndex struct, then theinterface is unified for all three kinds of MNA,
+it only need modify StampIndex, and template change with StampIndex.
+
+class iStampIndex
+{
+	row,
+	col
+};
+
+class kStampIndex
+{
+	row,
+	col,
+	index
+};
+
+
+
+   			
+			
+		
+	 	
+ 

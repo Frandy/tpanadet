@@ -10,10 +10,16 @@
 
 enum DeviceType
 {
-	RES,
-	CAP,
-	IND,
-	VS,
+	R,
+	C,
+	L,
+	E,
+	F,
+	G,
+	H,
+	V,
+	I,
+	OPAMP,
 };
 
 

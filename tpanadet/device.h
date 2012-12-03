@@ -75,6 +75,7 @@ public:
 	}
 
 /* Tran Analysis interface, sup & load */
+/*
 	void InitTranSup(vector<int>& row,vector<int>& col)
 	{
 		StampTrait::TranStamp::sup sup;
@@ -86,7 +87,7 @@ public:
  		StampTrait::TranStamp::load load;
 		load(node,value.TranValue(h,t),mna,row,col);
 	}
-
+*/
 /* Symbol interface */
 
 
@@ -98,6 +99,7 @@ public:
 	typedef _StampTrait StampTrait;
 	typedef _SymbolTrait SymbolTrait;
 };
+
 
 /* construct for different device, source, RCL, & EFGH */
 
@@ -121,5 +123,22 @@ TpDevice<FourNode, _DeviceValue, _StampTrait, _SymbolTrait>::TpDevice(string nm,
 {
 }
 
+
+typedef TpDevice<DeviceType::R,TwoNode,ResValue,ResStamp> ElemRes;
+typedef TpDevice<DeviceType::C,TwoNode,CapValue,CapStamp> ElemCap;
+typedef TpDevice<DeviceType::L,TwoNode,IndValue,IndStamp> ElemInd;
+typedef TpDevice<DeviceType::E,FourNode,NormalEFGHValue,EStamp> ElemE;
+typedef TpDevice<DeviceType::F,FourNode,NormalEFGHValue,FStamp> ElemF;
+typedef TpDevice<DeviceType::G,FourNode,NormalEFGHValue,GStamp> ElemG;
+typedef TpDevice<DeviceType::H,FourNode,NormalEFGHValue,HStamp> ElemH;
+typedef ElemE ElemVCVS;
+typedef ElemF ElemCCCS;
+typedef ElemG ElemVCCS;
+typedef ElemH ElemCCVS;
+
+typedef TpDevice<DeviceType::V,TwoNode,SourceValue,VStamp> ElemVs;
+typedef TpDevice<DeviceType::I,TwoNode,SourceValue,VStamp> ElemIs;
+
+typedef TpDevice<DeviceType::OPAMP,FourNode,NormalEFGHValue,OpampStamp> ElemOpamp;
 
 #endif /* DEVICE_H_ */

@@ -92,7 +92,7 @@ public:
 
 typedef EmptySup<TwoNode> EmptySup2;
 typedef EmptySup<FourNode> EmptySup4;
-typedef EmptySup<ArrayNode> EmptySupN;
+//typedef EmptySup<ArrayNode> EmptySupN;
 
 //@{ sup operation for device, E, F, H, OPAMP, & Fault-Short elem
 

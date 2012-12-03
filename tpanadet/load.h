@@ -64,7 +64,7 @@ public:
 
 class TranLoad
 {
-// a little complex, related with last value
+// a little complex, depend on last value
 // add branch for C/L, related with initial value or last-step value and step
 };
 
@@ -132,6 +132,7 @@ public:
 		mna.CellSet(rowk,cold,vType(1));
 	}
 };
+
 
 /*
  * F entry:
@@ -276,5 +277,29 @@ public:
 	}
 };
 
+
+
+typedef EmptyLoad<TwoNode,double> 	dEmptyLoad2;
+typedef EmptyLoad<TwoNode,Cplx> 	cEmptyLoad2;
+typedef EmptyLoad<FourNode,double> 	dEmptyLoad4;
+typedef EmptyLoad<FourNode,Cplx> 	cEmptyLoad4;
+
+typedef NormalLoad<double> 	dNormalLoad;
+typedef NormalLoad<Cplx> 	cNormalLoad;
+
+typedef ELoad<double> 	dELoad;
+typedef ELoad<Cplx> 	cELoad;
+typedef FLoad<double> 	dFLoad;
+typedef FLoad<Cplx> 	cFLoad;
+typedef GLoad<double> 	dGLoad;
+typedef GLoad<Cplx> 	cGLoad;
+typedef HLoad<double> 	dHLoad;
+typedef HLoad<Cplx> 	cHLoad;
+
+typedef VLoad<double>	dVLoad;
+typedef VLoad<Cplx>		cVLoad;
+
+typedef ILoad<double>	dILoad;
+typedef ILoad<Cplx>		cILoad;
 
 #endif /* LOAD_H_ */
