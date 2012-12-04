@@ -85,7 +85,7 @@ template<typename Node>
 class EmptySup
 {
 public:
-	void operator()(Node& node,vector<int>& row,vector<int>& col)
+	void operator()(Node& node,StampIndex& stampIndex)
 	{
 	}
 };
@@ -99,55 +99,100 @@ typedef EmptySup<FourNode> EmptySup4;
 class ESup
 {
 public:
-	void operator()(FourNode& node,vector<int>& row,vector<int>& col)
+	void operator()(FourNode& node,StampIndex& stampIndex)
 	{
 		SupOnly sup;
-		sup(node[2],node[3],row);
+		sup(node[2],node[3],stampIndex.row);
 	}
 };
 
 class FSup
 {
 public:
-	void operator()(FourNode& node,vector<int>& row,vector<int>& col)
+	void operator()(FourNode& node,StampIndex& stampIndex)
 	{
 		SupOnly sup;
-		sup(node[0],node[1],col);
+		sup(node[0],node[1],stampIndex.col);
 	}
 };
 
 class HSup
 {
 public:
-	void operator()(FourNode& node,vector<int>& row,vector<int>& col)
+	void operator()(FourNode& node,StampIndex& stampIndex)
 	{
 		SupOnly sup;
-		sup(node[0],node[1],col);
-		sup(node[2],node[3],row);
+		sup(node[0],node[1],stampIndex.col);
+		sup(node[2],node[3],stampIndex.row);
 	}
 };
 
 class OpampSup
 {
 public:
-	void operator()(FourNode& node,vector<int>& row,vector<int>& col)
+	void operator()(FourNode& node,StampIndex& stampIndex)
 	{
 		SupReindex sup;
-		sup(node[0],node[1],col);
-		sup(node[2],node[3],row);
+		sup(node[0],node[1],stampIndex.col);
+		sup(node[2],node[3],stampIndex.row);
 	}
 };
 
 class ShortSup
 {
 public:
-	void operator()(Two& node,vector<int>& row,vector<int>& col)
+	void operator()(Two& node,StampIndex& stampIndex)
 	{
 		SupReindex sup;
-		sup(node[0],node[1],col);
-		sup(node[0],node[1],row);
+		sup(node[0],node[1],stampIndex.col);
+		sup(node[0],node[1],stampIndex.row);
 	}
 };
+
+/*
+ * transient C, L
+ * 	add a branck
+ */
+class CLSupK
+{
+public:
+	void operator()(TwoNode& node,StampIndex& stampIndex)
+	{
+		stampIndex.IncK();
+	}
+};
+
+/*
+ * voltage source
+ * 	add a branch
+ */
+class VSupK
+{
+public:
+	void operator()(TwoNode& node,StampIndex& stampIndex)
+	{
+		/*
+		SupOnly sup;
+		sup(node[2],node[3],stampIndex.row);
+		*/
+		stampIndex.IncK();
+	}
+};
+
+/*
+ * voltage source
+ * 	improved MNA
+ */
+class VSup
+{
+public:
+	void operator()(TwoNode& node,StampIndex& stampIndex)
+	{
+		SupOnly sup;
+		sup(node[2],node[3],stampIndex.row);
+	}
+};
+
 
 //@}
 

@@ -1,0 +1,104 @@
+transient integration method
+	Forward Euler, 	1st order
+	Backword Eular,	1st order
+	Trapezoidal,	2nd order
+	Linear Multi-Step, nth order
+	
+it related with history, so there should be a deque to store the history.
+
+deque
+	double ended queue, support random visit.
+	
+	
+class TranHistory
+{
+public:
+	TranHistory(int n):max_length(n);
+	push(x)
+	{
+		history.push_back(x)
+		if history.size()>max_length
+			history.pop_front()
+	}
+public:
+	deque<vector<double> > history;
+	const int max_length;
+};		 
+
+while, for transient C & L, load also related with integration method.
+
+so, for C & L,
+
+switch integration_method:
+	FE, 
+		assert history.size==1
+		tranLoad = TranFE(node,value,mna,k_stamp_index,history)
+	BE,
+		assert history.size==1
+		tranLoad = TranBE(node,value,mna,k_stamp_index,history)
+ 	TP,
+ 		assert history.size==2
+		tranLoad = TranTP(node,value,mna,k_stamp_index,history)	
+	PredictCorrectEuler,	
+		assert history.size==1
+		tranLoad = TranPredictCorrectEuler(node,value,mna,k_stamp_index,history)
+//@{
+// not considered immediately
+	Gear
+		assert history.size==2 || 3 || 4
+		tranLoad = TranGear(node,value,mna,k_stamp_index,history)
+	AdamsBashforth
+		assert history.size==2 || 3 || 4
+		tranLoad = TranAdamsBashforth(node,value,mna,k_stamp_index,history)	
+	AdamsMoulton
+		assert history.size==2 || 3 || 4
+		tranLoad = TranAdamsMoulton(node,value,mna,k_stamp_index,history)	
+	RungeKutta
+		assert history.size==2 || 3 || 4
+		tranLoad = TranRungeKutta(node,value,mna,k_stamp_index,history)
+	Hamming
+		better than Simpson
+	PMECME
+//@}			
+	
+how to change between the different integration method?
+
+AnalysisTran
+	basic stamp
+		template<integration_method>
+		stamp()
+			for device in list,
+				if C || L,
+					(DeviceCap*/DeviceInd*)TranBE<integration_method>();
+				else
+					TranLoad()
+		/*
+		stamp, 
+			//default stamp method
+			for device in list,
+				if C || L,
+					TranBE()
+				else
+					TranLoad()
+		stampTP
+			for device in list
+				if C || L,
+					TranTP()
+				else
+					TranLoad()
+		other method
+		*/
+	analysis
+		coreBE
+			initial history by initial condition, 
+			stampBE, 
+			solve
+		BE
+			initial history by 1
+			coreBE
+		TP
+			initial history by 2
+			coreBE
+			for 
+				stampTP
+						
